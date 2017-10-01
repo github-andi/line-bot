@@ -1,4 +1,4 @@
-import os
+# encoding: utf-8
 from flask import Flask, request, abort
 
 from linebot import (
@@ -13,9 +13,8 @@ from linebot.models import (
 
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('MTn2latTZ4NmBnuah67007iRDPdliDVKkpxR1yb5IGpzTARdjzAqSnLmhkvew0EqfNs3wDSQuTc8j/DUfKCoPFpV3ECtur1KUxyiRd1jZjeS9JA7yJXlkuK6l6/WkCJEKDybBDiRMdFbYxtFlRYOmQdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('adbb3952c8bc75b90664aa5ededbbbec')
-
+line_bot_api = LineBotApi('') #Your Channel Access Token
+handler = WebhookHandler('') #Your Channel Secret
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -34,14 +33,15 @@ def callback():
 
     return 'OK'
 
-
 @handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
+def handle_text_message(event):
+    text = event.message.text #message from user
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text=text)) #reply the same message from user
+    
 
-
+import os
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0',port=os.environ['PORT'])
